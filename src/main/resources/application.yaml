@@ -1,3 +1,20 @@
+server:
+  servlet:
+    context-path: /bankAccount
+  port: 8081
 
 
+database : h2
 
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  h2:
+    console:
+      enabled: true
+  datasource:
+    data: classpath*:db/${database}/data.sql
+    schema: classpath*:db/${database}/schema.sql
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
