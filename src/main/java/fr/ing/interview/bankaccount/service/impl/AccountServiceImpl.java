@@ -14,11 +14,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static fr.ing.interview.bankaccount.util.ConstantUtil.*;
+
 
 @Service
 public class AccountServiceImpl implements AccountService {
-
-    public static final double DEPOSIT_AMOUNT_LIMIT = 0.01;
 
     @Resource
     private AccountRepository accountRepository;
@@ -38,14 +38,14 @@ public class AccountServiceImpl implements AccountService {
     public Transaction deposit(Integer accountId, Double amount) {
         Transaction savedTransaction;
         if (amount < DEPOSIT_AMOUNT_LIMIT) {
-            throw new AmountLimitException("deposit money from a customer to his account, is allowed when superior to €0.01");
+            throw new AmountLimitException(DEPOSIT_LIMIT_ERROR_MESSAGE);
         } else {
             Account account = getAccount(accountId);
             account.setCurrentBalance(account.getCurrentBalance() + amount);
 
             accountRepository.save(account);
 
-            savedTransaction = transactionRepository.save(buildTransaction(amount, account, "DEPOSIT"));
+            savedTransaction = transactionRepository.save(buildTransaction(amount, account, DEPOSIT));
         }
         return savedTransaction;
     }
@@ -66,11 +66,11 @@ public class AccountServiceImpl implements AccountService {
         Account account = getAccount(accountId);
 
         if (amount - account.getCurrentBalance() > account.getOverdraft()) {
-            throw new AmountLimitException("You cannot withdraw money, overdraft is used");
+            throw new AmountLimitException(OVERDRAFT_USED_ERROR_MESSAGE);
         } else{
             account.setCurrentBalance(account.getCurrentBalance() - amount);
             accountRepository.save(account);
-            savedTransaction = transactionRepository.save(buildTransaction(amount, account, "WITHDRAW"));
+            savedTransaction = transactionRepository.save(buildTransaction(amount, account, WITHDRAW));
         }
 
         return savedTransaction;
@@ -107,7 +107,7 @@ public class AccountServiceImpl implements AccountService {
     public Account getAccount(Integer accountId) {
         Optional<Account> accountOptional = accountRepository.findById(accountId);
         if (!accountOptional.isPresent())
-            throw new AccountNotFoundException("Bank Account Not Found");
+            throw new AccountNotFoundException(BANK_ACCOUNT_NOT_FOUND_ERROR_MESSAGE);
         return accountOptional.get();
     }
 
