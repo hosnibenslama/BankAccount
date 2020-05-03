@@ -32,7 +32,7 @@ CREATE TABLE B_Transaction (
   transaction_id         INTEGER IDENTITY PRIMARY KEY,
   transaction_type VARCHAR(30),
   amount FLOAT,
-  operation_date DATE,
+  operation_date TIMESTAMP ,
   balance_after_transaction FLOAT,
   account_id INTEGER
 );

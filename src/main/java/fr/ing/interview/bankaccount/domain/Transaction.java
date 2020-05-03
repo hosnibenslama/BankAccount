@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @Builder
@@ -28,7 +28,7 @@ public class Transaction {
     private double amount;
 
     @Column
-    private Date operationDate;
+    private Timestamp operationDate;
 
     @Column
     private double balanceAfterTransaction;
